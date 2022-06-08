@@ -15,7 +15,7 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new Error('Please fill out all fields')
   }
 
-  const user = await User.findOne({email}).select("email").lean()
+  const user = await User.findOne({email}).select("email")
 
   if(user) {
     res.status(400)
@@ -73,14 +73,15 @@ const loginUser = asyncHandler(async (req, res) => {
 // @route   GET /api/user/profile
 // @access  Private
 const getUser = asyncHandler(async (req, res) => {
-  res.status(200).json({message:'check single profile'})
+  res.status(200).json(req.authorizedUser)
 })
 
 // @desc    edit user details
-// @route   PUT /api/user/:id
+// @route   PUT /api/user/profile/edit
 // @access  Private
 const editUser = asyncHandler(async (req, res) => {
-  res.status(200).json({message:`update goal ${req.params.id}`})
+  const updatedUser = await User.findByIdAndUpdate(req.authorizedUser.id, req.body, { new: true }).select('-password -_id -__v -createdAt')
+  res.status(200).json(updatedUser)
 })
 
 // generating jwt
