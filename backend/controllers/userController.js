@@ -4,7 +4,6 @@ const bcrypt = require('bcryptjs')
 
 const User = require('../models/userModel')
 
-
 // @desc    register user
 // @route   POST /api/user/register
 // @access  Public
@@ -69,11 +68,20 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 })
 
-// @desc    get user details
+// @desc    get logged in user details
 // @route   GET /api/user/profile
 // @access  Private
-const getUser = asyncHandler(async (req, res) => {
+const getUserSelf = asyncHandler(async (req, res) => {
   res.status(200).json(req.authorizedUser)
+})
+
+// @desc    get any user's profile details
+// @route   GET /api/user/profile/:id
+// @access  Public
+const getUserPublic = asyncHandler(async (req, res) => {
+  const userId = req.params.id
+  const userData = await User.findById(userId).select('name institution -_id')
+  res.status(200).json(userData)
 })
 
 // @desc    edit user details
@@ -94,6 +102,7 @@ const generateToken = (id) => {
 module.exports = {
   registerUser,
   loginUser,
-  getUser,
+  getUserSelf,
+  getUserPublic,
   editUser
 }
