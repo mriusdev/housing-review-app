@@ -37,7 +37,52 @@ const editReview = asyncHandler(async (req, res) => {
   res.status(200).json(updatedReview)
 })
 
+// @desc    get a single review
+// @route   GET /api/review/:id
+// @access  Private
+const getSingleReview = asyncHandler(async (req, res) => {
+  const singleReviewData = await Review.findById(req.params.id).select('-_id -__v')
+  if(singleReviewData) {
+    res.status(200).json(singleReviewData)
+  } else {
+    res.status(404)
+    throw new Error('Review not found')
+  }
+})
+
+// @desc    delete a single review
+// @route   DELETE /api/review/delete/:id
+// @access  Private
+const deleteReview = asyncHandler(async (req, res) => {
+  const deletedReview = await Review.findByIdAndDelete(req.params.id)
+  console.log(deletedReview)
+  if(deletedReview) {
+    res.status(200).json({
+      message: 'Review deleted'
+    })
+  } else {
+    res.status(400)
+    throw new Error('Could not delete review')
+  }
+})
+
+// @desc    get all reviews
+// @route   PUT /api/review/delete/:id
+// @access  Public
+const getReviews = asyncHandler(async (req, res) => {
+  const reviews = await Review.find()
+  if(reviews) {
+    res.status(200).json(reviews)
+  } else {
+    res.status(400)
+    throw new Error('No reviews found')
+  }
+})
+
 module.exports = {
   postReview,
-  editReview
+  editReview,
+  deleteReview,
+  getSingleReview,
+  getReviews
 }
