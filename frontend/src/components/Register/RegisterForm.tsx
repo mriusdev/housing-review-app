@@ -1,8 +1,8 @@
-import { Input, Flex, Button } from "@chakra-ui/react";
-import { useState, useEffect } from "react";
+import { Input, Flex, Button, Text } from "@chakra-ui/react";
+import { useState } from "react";
 
-import {useAppSelector, useAppDispatch} from '../../app/hooks'
-import { register, reset } from '../../features/auth/authSlice'
+import {useAppDispatch} from '../../app/hooks'
+import { register } from '../../features/auth/authSlice'
 
 
 interface IFormData {
@@ -10,6 +10,12 @@ interface IFormData {
   email: string;
   password: string;
   passwordConfirm: string;
+}
+
+interface IWarningError {
+  formField: string;
+  warning: boolean;
+  warningMsg: string;
 }
 
 const Form = () => {
@@ -20,22 +26,39 @@ const Form = () => {
     passwordConfirm: ""
   });
 
+  const [formWarning, setFormWarning] = useState<IWarningError>({
+    formField: "",
+    warning: false,
+    warningMsg: ''
+  })
+
   const { name, email, password, passwordConfirm } = formData
 
   const dispatch = useAppDispatch()
-
-  const { user, isLoading, isError, isSuccess, message } = useAppSelector((state) => state.auth)
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prevFormData) => ({
       ...prevFormData,
       [e.target.name]: e.target.value
     }))
+
+    if(formWarning.warning && formWarning.formField === e.target.name) {
+      setFormWarning({
+        formField: "",
+        warning: false,
+        warningMsg: ""
+      })
+    }
   }
 
   const registerUser = () => {
     if (password !== passwordConfirm) {
-      // handleError
+      setFormWarning({
+        formField: "password",
+        warning: true,
+        warningMsg: "Passwords must match"
+      })
+
     } else {
       const processedFormData = {
         name,
@@ -57,6 +80,7 @@ const Form = () => {
           focusBorderColor="brand.blue"
           borderColor="#2d27278a"
           bg="#5b8ff30d"
+          fontSize={{ base: "13px", xl: "14px"}}
           placeholder="Name"
           name="name"
           value={name}
@@ -69,6 +93,7 @@ const Form = () => {
           focusBorderColor="brand.blue"
           borderColor="#2d27278a"
           bg="#5b8ff30d"
+          fontSize={{ base: "13px", xl: "14px"}}
           placeholder="Email"
           name="email"
           value={email}
@@ -81,6 +106,7 @@ const Form = () => {
           focusBorderColor="brand.blue"
           borderColor="#2d27278a"
           bg="#5b8ff30d"
+          fontSize={{ base: "13px", xl: "14px"}}
           placeholder="Password"
           name="password"
           value={password}
@@ -93,6 +119,7 @@ const Form = () => {
           focusBorderColor="brand.blue"
           borderColor="#2d27278a"
           bg="#5b8ff30d"
+          fontSize={{ base: "13px", xl: "14px"}}
           placeholder="Confirm password"
           name="passwordConfirm"
           value={passwordConfirm}
@@ -100,6 +127,11 @@ const Form = () => {
           color="brands.mainDark"
           onChange={onChange}
         />
+        {formWarning.warning && (
+          <Text color="red.500" fontSize="sm" >
+            {formWarning.warningMsg}
+          </Text>
+        )}
       </Flex>
 
       <Button
