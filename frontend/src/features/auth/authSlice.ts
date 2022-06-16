@@ -5,6 +5,7 @@ import authService from './authService'
 const user = localStorage.getItem('user')
 
 export interface IUser {
+  _id: string;
   email: string;
   token: string;
 }
@@ -14,7 +15,7 @@ interface IInitialState {
   isLoading: boolean;
   isError: boolean;
   isSuccess: boolean;
-  message: string;
+  message: string | null;
 }
 
 const initialState: IInitialState = {
@@ -22,7 +23,7 @@ const initialState: IInitialState = {
   isLoading: false,
   isError: false,
   isSuccess: false,
-  message: ''
+  message: null
 }
 
 export interface IUserRegisterData {
@@ -68,7 +69,7 @@ export const authSlice = createSlice({
       state.isLoading = false
       state.isError = false
       state.isSuccess = false
-      state.message = ''
+      state.message = null
     }
   },
   extraReducers: (builder) => {

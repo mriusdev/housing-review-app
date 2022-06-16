@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter, Route, Routes, Link } from "react-router-dom";
-import { Flex, Text, Button } from "@chakra-ui/react";
+import { Flex, Button } from "@chakra-ui/react";
 import { useState } from "react";
 
 import Register from "./pages/Register";
@@ -42,17 +42,17 @@ function App() {
           <Flex justify="flex-end" my={5} mx={5}>
             <Button onClick={() => setDisplayHamburger("none")}>Close nav</Button>
           </Flex>
-          <Link to="/">
+          <Link to="/" onClick={() => setDisplayHamburger("none")}>
             <Button colorScheme='teal' variant='outline' mx={5}>
               Home
             </Button>
           </Link>
-          <Link to="/login">
+          <Link to="/login" onClick={() => setDisplayHamburger("none")}>
             <Button colorScheme='teal' variant='outline' mx={5}>
               Login
             </Button>
           </Link>
-          <Link to="/register">
+          <Link to="/register" onClick={() => setDisplayHamburger("none")}>
             <Button colorScheme='teal' variant='outline' mx={5}>
               Register
             </Button>

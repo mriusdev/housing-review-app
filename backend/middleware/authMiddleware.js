@@ -15,7 +15,7 @@ const authProtection = asyncHandler(async (req, res, next) => {
 
       // get user from the token ( because we have the user_id in the payload )
       // we also assign it to req.authorizedUser for any route that's protected
-      req.authorizedUser = await User.findById(decodedToken.id).select('-password')
+      req.authorizedUser = await User.findById(decodedToken.id).select('-password -__v')
 
       // calling the next action, letting user move on
       next()
