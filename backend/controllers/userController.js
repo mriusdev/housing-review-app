@@ -88,6 +88,16 @@ const getUserPublic = asyncHandler(async (req, res) => {
 // @route   PUT /api/user/profile/edit
 // @access  Private
 const editUser = asyncHandler(async (req, res) => {
+  if(req.body.email) {
+    const { email } = req.body
+    const isEmailUsed = await User.findOne({email})
+    
+    if(isEmailUsed) {
+      res.status(400)
+      throw new Error('Please choose another email')
+    }
+  }
+  
   const updatedUser = await User.findByIdAndUpdate(req.authorizedUser.id, req.body, { new: true }).select('-password -_id -__v -createdAt')
   res.status(200).json(updatedUser)
 })
