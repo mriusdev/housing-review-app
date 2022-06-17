@@ -5,6 +5,7 @@ const colors = {
     mainDark: '#2D2727',
     blue: '#5B8FF3',
     orange: '#F3BF5B',
+    purple: '#F35BDB'
   }
 }
 

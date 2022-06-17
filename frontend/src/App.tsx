@@ -23,6 +23,7 @@ function App() {
           px={5}
           py={5}
           display={{ base: "flex", md: "none" }}
+          zIndex={20}
         >
           <Button onClick={() => setDisplayHamburger("flex")}>Menu</Button>
         </Flex>

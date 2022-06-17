@@ -51,6 +51,9 @@ export const privateProfileSlice = createSlice({
       state.isSuccess = false
       state.message = null
       state.profileDetails = null
+    },
+    toggleEdit: (state) => {
+      state.isEdit = !state.isEdit
     }
   },
   extraReducers: (builder) => {
@@ -69,6 +72,6 @@ export const privateProfileSlice = createSlice({
   }
 })
 
-export const { reset } = privateProfileSlice.actions
+export const { reset, toggleEdit } = privateProfileSlice.actions
 
 export default privateProfileSlice.reducer
