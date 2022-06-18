@@ -15,7 +15,6 @@ const EditFields = ({ name, email, institution, onClick, onChange }: IProps) => 
       <Flex direction="column" rowGap={4}>
         <Flex direction="column">
           <Text fontSize="15px" fontWeight="bold">Name</Text>
-          {/* <Text fontSize="15px" color="gray.400">this is an edit field</Text> */}
           <Input
             type="text"
             focusBorderColor="brand.blue"
@@ -33,7 +32,6 @@ const EditFields = ({ name, email, institution, onClick, onChange }: IProps) => 
 
         <Flex direction="column">
           <Text fontSize="15px" fontWeight="bold">Email</Text>
-          {/* <Text fontSize="15px" color="gray.400">asdasd@gmail.com</Text> */}
           <Input
             type="email"
             focusBorderColor="brand.blue"
@@ -51,7 +49,6 @@ const EditFields = ({ name, email, institution, onClick, onChange }: IProps) => 
 
         <Flex direction="column">
           <Text fontSize="15px" fontWeight="bold">Institution</Text>
-          {/* <Text fontSize="15px" color="gray.400">ddd Kolegija</Text> */}
           <Input
             type="text"
             focusBorderColor="brand.blue"

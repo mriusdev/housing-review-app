@@ -2,8 +2,15 @@ import axios from 'axios'
 
 const API_URL = '/api/user/'
 
-const getProfile = async () => {
-  const response = await axios.post(API_URL + 'profile')
+
+const getProfile = async (token: string) => {
+  const tokenConfig = {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+  
+  const response = await axios.get(API_URL + 'profile', tokenConfig)
 
   return response.data
 }

@@ -10,7 +10,7 @@ export interface IUser {
   token: string;
 }
 
-interface IInitialState {
+export interface IInitialState {
   user: IUser | null;
   isLoading: boolean;
   isError: boolean;

@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
 import privateProfileService from './privateProfileService';
+import {IInitialState as IAuthState} from '../auth/authSlice'
 
 export interface IUserProfile {
   _id: "string",
@@ -30,14 +31,20 @@ const initialState: IInitialState = {
 }
 
 export const getProfile = createAsyncThunk('privateProfile/get', async(_, thunkAPI) => {
-  try {
-    return await privateProfileService.getProfile()
+  const {auth} = thunkAPI.getState() as { auth: IAuthState }
+  if(auth.user?.token) {
+    const token: string = auth.user?.token
 
-  } catch (error: any) {
-    const message = (error.response.data.message)
+    try {
+      return await privateProfileService.getProfile(token)
 
-    return thunkAPI.rejectWithValue(message)
+    } catch (error: any) {
+      const message = (error.response.data.message)
+
+      return thunkAPI.rejectWithValue(message)
+    }
   }
+
 })
 
 export const privateProfileSlice = createSlice({

@@ -58,6 +58,12 @@ function App() {
               Register
             </Button>
           </Link>
+
+          <Link to="/customize" onClick={() => setDisplayHamburger("none")}>
+            <Button colorScheme='teal' variant='outline' mx={5}>
+              Profile
+            </Button>
+          </Link>
         </Flex>
         <Routes>
           <Route path="/" element={<Home />} />
