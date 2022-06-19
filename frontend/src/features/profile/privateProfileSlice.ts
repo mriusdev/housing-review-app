@@ -4,12 +4,12 @@ import privateProfileService from './privateProfileService';
 import {IInitialState as IAuthState} from '../auth/authSlice'
 
 export interface IUserProfile {
-  _id: "string",
-  name: "string",
-  email: "string",
-  institution: "string",
-  createdAt: "string",
-  updatedAt: "string"
+  _id?: string
+  name: string
+  email: string
+  institution: string
+  createdAt: string
+  updatedAt: string
 }
 
 interface IInitialState {
@@ -17,8 +17,8 @@ interface IInitialState {
   isLoading: boolean;
   isError: boolean;
   isSuccess: boolean;
-  message: string | null;
-  profileDetails: IUserProfile | null
+  message: string;
+  profileDetails: IUserProfile | any
 }
 
 const initialState: IInitialState = {
@@ -26,8 +26,8 @@ const initialState: IInitialState = {
   isLoading: false,
   isError: false,
   isSuccess: false,
-  message: null,
-  profileDetails: null
+  message: '',
+  profileDetails: ''
 }
 
 export const getProfile = createAsyncThunk('privateProfile/get', async(_, thunkAPI) => {
@@ -56,8 +56,8 @@ export const privateProfileSlice = createSlice({
       state.isLoading = false
       state.isError = false
       state.isSuccess = false
-      state.message = null
-      state.profileDetails = null
+      state.message = ''
+      state.profileDetails = ''
     },
     toggleEdit: (state) => {
       state.isEdit = !state.isEdit

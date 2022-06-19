@@ -7,43 +7,39 @@ import { useAppSelector, useAppDispatch } from "../app/hooks";
 import {
   toggleEdit,
   getProfile,
+  IUserProfile
 } from "../features/profile/privateProfileSlice";
 import EditFields from "../components/PrivateProfile/EditFields";
-
-interface IEditMode {
-  isEdit: boolean;
-}
+import DisplayFields from "../components/PrivateProfile/DisplayFields";
+import {convertDate} from '../components/HelperFunctions'
 
 const Customize = () => {
   const { isEdit, profileDetails } = useAppSelector((state) => state.privateProfile);
 
-  const [edit, setEdit] = useState<IEditMode>({
-    isEdit,
-  });
-
-  const [mockData, setMockData] = useState<{
-    name: string;
-    email: string;
-    institution: string;
-  }>({
-    name: "Andrius M",
-    email: "andrius@mgma.com",
-    institution: "Kauno Kolegija",
-  });
-
-  const { name, email, institution } = mockData;
+  const [editDetails, setEditDetails] = useState<IUserProfile>({
+    name: "",
+    email: "",
+    institution: "",
+    createdAt: "",
+    updatedAt: ""
+  })
 
   const dispatch = useAppDispatch();
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setMockData((prevFormData) => ({
+    setEditDetails((prevFormData) => ({
       ...prevFormData,
       [e.target.name]: e.target.value,
     }));
   };
 
+  const onClick = () => {
+    // dispatch(updateProfile(editDetails))
+  }
+
   useEffect(() => {
     dispatch(getProfile());
+    setEditDetails(profileDetails)
   }, [dispatch]);
 
   return (
@@ -76,7 +72,7 @@ const Customize = () => {
             color="brand.mainDark"
           >
             Created at: <br />
-            {profileDetails?.createdAt}
+            {convertDate(profileDetails?.createdAt)}
           </Text>
 
           <Flex
@@ -103,40 +99,18 @@ const Customize = () => {
         <Flex direction="column" rowGap={16}>
           {isEdit ? (
             <EditFields
+              name={editDetails?.name}
+              email={editDetails?.email}
+              institution={editDetails?.institution}
+              onChange={onChange}
+              onClick={onClick}
+            />
+          ) : (
+            <DisplayFields
               name={profileDetails?.name}
               email={profileDetails?.email}
               institution={profileDetails?.institution}
-              onChange={onChange}
             />
-          ) : (
-            <Flex direction="column" rowGap={4}>
-              <Flex direction="column">
-                <Text fontSize="15px" fontWeight="bold">
-                  Name
-                </Text>
-                <Text fontSize="15px" color="gray.400">
-                  {profileDetails?.name}
-                </Text>
-              </Flex>
-
-              <Flex direction="column">
-                <Text fontSize="15px" fontWeight="bold">
-                  Email
-                </Text>
-                <Text fontSize="15px" color="gray.400">
-                  {profileDetails?.email}
-                </Text>
-              </Flex>
-
-              <Flex direction="column">
-                <Text fontSize="15px" fontWeight="bold">
-                  Institution
-                </Text>
-                <Text fontSize="15px" color="gray.400">
-                  {profileDetails?.institution}
-                </Text>
-              </Flex>
-            </Flex>
           )}
 
           <Flex columnGap={3}>
@@ -145,7 +119,7 @@ const Customize = () => {
             </Flex>
             <Text lineHeight="16px" fontSize="13px" color="brand.mainDark">
               Updated at: <br />
-              {profileDetails?.updatedAt}
+              {convertDate(profileDetails?.updatedAt)}
             </Text>
           </Flex>
         </Flex>
