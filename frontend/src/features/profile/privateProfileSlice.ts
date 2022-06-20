@@ -57,7 +57,7 @@ export const privateProfileSlice = createSlice({
       state.isError = false
       state.isSuccess = false
       state.message = ''
-      state.profileDetails = ''
+      // state.profileDetails = ''
     },
     toggleEdit: (state) => {
       state.isEdit = !state.isEdit

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Container, Box, Text, Flex, Icon } from "@chakra-ui/react";
+import { Container, Text, Flex, Icon } from "@chakra-ui/react";
 import { VscEdit } from "react-icons/vsc";
 import { MdOutlineCancel } from "react-icons/md";
 
@@ -7,21 +7,22 @@ import { useAppSelector, useAppDispatch } from "../app/hooks";
 import {
   toggleEdit,
   getProfile,
-  IUserProfile
+  IUserProfile,
+  reset
 } from "../features/profile/privateProfileSlice";
 import EditFields from "../components/PrivateProfile/EditFields";
 import DisplayFields from "../components/PrivateProfile/DisplayFields";
-import {convertDate} from '../components/HelperFunctions'
+import {convertDate, waitFor} from '../components/HelperFunctions'
 
 const Customize = () => {
-  const { isEdit, profileDetails } = useAppSelector((state) => state.privateProfile);
+  const { isEdit, profileDetails, isSuccess } = useAppSelector((state) => state.privateProfile);
 
   const [editDetails, setEditDetails] = useState<IUserProfile>({
-    name: "",
-    email: "",
-    institution: "",
-    createdAt: "",
-    updatedAt: ""
+    name: "starting data",
+    email: "starting data",
+    institution: "starting data",
+    createdAt: "starting data",
+    updatedAt: "starting data"
   })
 
   const dispatch = useAppDispatch();
@@ -38,9 +39,16 @@ const Customize = () => {
   }
 
   useEffect(() => {
-    dispatch(getProfile());
-    setEditDetails(profileDetails)
-  }, [dispatch]);
+    if(profileDetails === '') {
+      dispatch(getProfile());
+    }
+    
+    waitFor(isSuccess).then(() => {
+      setEditDetails(profileDetails)
+
+    })
+
+  }, [dispatch, isSuccess]);
 
   return (
     <>
@@ -99,9 +107,9 @@ const Customize = () => {
         <Flex direction="column" rowGap={16}>
           {isEdit ? (
             <EditFields
-              name={editDetails?.name}
-              email={editDetails?.email}
-              institution={editDetails?.institution}
+              name={editDetails.name}
+              email={editDetails.email}
+              institution={editDetails.institution}
               onChange={onChange}
               onClick={onClick}
             />
