@@ -7,7 +7,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
-import Customize from "./pages/Customize";
+import CustomizeProfile from "./pages/CustomizeProfile";
 
 function App() {
   const [displayHamburger, setDisplayHamburger] = useState<string>("none");
@@ -70,7 +70,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/customize" element={<Customize />} />
+          <Route path="/customize" element={<CustomizeProfile />} />
         </Routes>
       </BrowserRouter>
     </>

@@ -71,8 +71,10 @@ const loginUser = asyncHandler(async (req, res) => {
 // @desc    get logged in user details
 // @route   GET /api/user/profile
 // @access  Private
-const getUserSelf = asyncHandler(async (req, res) => {
-  res.status(200).json(req.authorizedUser)
+const getUserPrivate = asyncHandler(async (req, res) => {
+  const id = req.authorizedUser._id
+  const user = await User.findById(id).select('-password')
+  res.status(200).json(user)
 })
 
 // @desc    get any user's profile details
@@ -88,18 +90,41 @@ const getUserPublic = asyncHandler(async (req, res) => {
 // @route   PUT /api/user/profile/edit
 // @access  Private
 const editUser = asyncHandler(async (req, res) => {
-  if(req.body.email) {
-    const { email } = req.body
-    const isEmailUsed = await User.findOne({email})
+  const id = req.authorizedUser._id
+  const user = await User.findById(id).select('name institution email -_id')
+
+  if(req.body) {
     
-    if(isEmailUsed) {
-      res.status(400)
-      throw new Error('Please choose another email')
+    if(user.name === req.body.name) {
+      delete req.body.name
     }
+    if(user.email === req.body.email) {
+      delete req.body.email
+    }
+    if(user.institution === req.body.institution) {
+      delete req.body.institution
+    }
+    
+    if(Object.keys(req.body).length > 0) {
+      await User.findByIdAndUpdate(req.authorizedUser.id, req.body, { new: true }).select('-password -_id -__v')
+      res.status(200).json("Data updated")
+    } else {
+      res.status(200).json("Data updated")
+    }
+    
   }
+
+  // if(req.body.email) {
+  //   const { email } = req.body
+  //   const isEmailUsed = await User.findOne({email})
+    
+  //   if(isEmailUsed) {
+  //     res.status(400)
+  //     throw new Error('Please choose another email')
+  //   }
+  // }
   
-  const updatedUser = await User.findByIdAndUpdate(req.authorizedUser.id, req.body, { new: true }).select('-password -_id -__v -createdAt')
-  res.status(200).json(updatedUser)
+  
 })
 
 // generating jwt
@@ -112,7 +137,7 @@ const generateToken = (id) => {
 module.exports = {
   registerUser,
   loginUser,
-  getUserSelf,
+  getUserPrivate,
   getUserPublic,
   editUser
 }
