@@ -8,6 +8,7 @@ import Login from "./pages/Login";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import CustomizeProfile from "./pages/CustomizeProfile";
+import Nav from "./components/Navigation/Nav";
 
 function App() {
   const [displayHamburger, setDisplayHamburger] = useState<string>("none");
@@ -65,6 +66,7 @@ function App() {
             </Button>
           </Link>
         </Flex>
+        <Nav />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/register" element={<Register />} />
