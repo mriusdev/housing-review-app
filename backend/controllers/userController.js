@@ -58,7 +58,7 @@ const loginUser = asyncHandler(async (req, res) => {
   const user = await User.findOne({email})
   if(user && (await bcrypt.compare(password, user.password))) {
     res.status(201).json({
-      message: 'user logged in',
+      _id: user._id,
       email: user.email,
       token: generateToken(user.id)
     })
@@ -114,16 +114,6 @@ const editUser = asyncHandler(async (req, res) => {
     
   }
 
-  // if(req.body.email) {
-  //   const { email } = req.body
-  //   const isEmailUsed = await User.findOne({email})
-    
-  //   if(isEmailUsed) {
-  //     res.status(400)
-  //     throw new Error('Please choose another email')
-  //   }
-  // }
-  
   
 })
 
