@@ -83,7 +83,7 @@ const Customize = () => {
           <Flex
             width={{base:"306px", md: "750px"}}
             height="100%"
-            pt={{base: 0, md: 0}}
+            pt={{base: 0, md: 5}}
             direction="column"
             align={{base: "center", md: "start"}}
             justify="center"

@@ -3,16 +3,28 @@ import { BrowserRouter, Route, Routes, Link } from "react-router-dom";
 import { Flex, Button } from "@chakra-ui/react";
 import { useState } from "react";
 
+import { useAppSelector, useAppDispatch } from "./app/hooks";
+import { logout, reset } from './features/auth/authSlice'
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import CustomizeProfile from "./pages/CustomizeProfile";
 import Nav from "./components/Navigation/Nav";
+import Protected from "./components/Protected";
 
 function App() {
   const [displayHamburger, setDisplayHamburger] = useState<string>("none");
 
+  const { user } = useAppSelector((state) => state.auth);
+
+  const dispatch = useAppDispatch()
+
+  const logoutOperations = () => {
+    dispatch(logout())
+    dispatch(reset())
+    setDisplayHamburger("none")
+  }
   return (
     <>
       <BrowserRouter>
@@ -44,35 +56,63 @@ function App() {
           <Flex justify="flex-end" my={5} mx={5}>
             <Button onClick={() => setDisplayHamburger("none")}>Close nav</Button>
           </Flex>
+          
           <Link to="/" onClick={() => setDisplayHamburger("none")}>
             <Button colorScheme='teal' variant='outline' mx={5}>
               Home
             </Button>
           </Link>
-          <Link to="/login" onClick={() => setDisplayHamburger("none")}>
-            <Button colorScheme='teal' variant='outline' mx={5}>
-              Login
-            </Button>
-          </Link>
-          <Link to="/register" onClick={() => setDisplayHamburger("none")}>
-            <Button colorScheme='teal' variant='outline' mx={5}>
-              Register
-            </Button>
-          </Link>
+          {user ? 
+            <>
+              <Button colorScheme='teal' onClick={logoutOperations} variant='outline' mx={5}>
+                Sign Out
+              </Button>
 
-          <Link to="/customize" onClick={() => setDisplayHamburger("none")}>
-            <Button colorScheme='teal' variant='outline' mx={5}>
-              Profile
-            </Button>
-          </Link>
+              <Link to="/customize" style={{display: "block"}} onClick={() => setDisplayHamburger("none")}>
+                <Button colorScheme='teal' variant='outline' mx={5}>
+                  Profile
+                </Button>
+              </Link>
+            </>
+            :
+            <>
+              <Link to="/login" onClick={() => setDisplayHamburger("none")}>
+                <Button colorScheme='teal' variant='outline' mx={5}>
+                  Login
+                </Button>
+              </Link>
+              <Link to="/register" onClick={() => setDisplayHamburger("none")}>
+                <Button colorScheme='teal' variant='outline' mx={5}>
+                  Register
+                </Button>
+              </Link>
+            </>
+          }
+          
         </Flex>
-        <Nav />
+
+        <Nav isUserFound={user}/>
+
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/customize" element={<CustomizeProfile />} />
+          <Route
+            path="/dashboard"
+            element={
+              <Protected isUserFound={user}>
+                <Dashboard />
+              </Protected>
+            }
+          />
+          <Route
+            path="/customize"
+            element={
+              <Protected isUserFound={user}>
+                <CustomizeProfile />
+              </Protected>
+            }
+          />
         </Routes>
       </BrowserRouter>
     </>
