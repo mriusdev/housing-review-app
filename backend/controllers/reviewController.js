@@ -6,14 +6,15 @@ const Review = require('../models/reviewModel')
 // @route   POST /api/review/create
 // @access  Private
 const postReview = asyncHandler(async (req, res) => {
-  const { description, rating, images } = req.body
-  if(description === '' || rating < 1 || images.length === 0) {
+  const { institution, description, rating, images } = req.body
+  if(institution === '' || description === '' || rating < 1 || images.length === 0) {
     res.status(400)
     throw new Error('Please fill out all fields')
   }
 
   const createdReview = await Review.create({
     relatedUser: req.authorizedUser.id,
+    institution,
     description,
     rating,
     images

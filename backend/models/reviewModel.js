@@ -6,6 +6,10 @@ const reviewSchema = mongoose.Schema({
     required: true,
     ref: 'User'
   },
+  institution: {
+    type: String,
+    required: true,
+  },
   description: {
     type: String,
     required: true,

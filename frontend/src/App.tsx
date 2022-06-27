@@ -1,6 +1,5 @@
-import React from "react";
 import { BrowserRouter, Route, Routes, Link } from "react-router-dom";
-import { Flex, Button } from "@chakra-ui/react";
+import { Flex, Button, Container } from "@chakra-ui/react";
 import { useState } from "react";
 
 import { useAppSelector, useAppDispatch } from "./app/hooks";
@@ -12,6 +11,7 @@ import Dashboard from "./pages/Dashboard";
 import CustomizeProfile from "./pages/CustomizeProfile";
 import Nav from "./components/Navigation/Nav";
 import Protected from "./components/Protected";
+import CreateReview from "./pages/CreateReview";
 
 function App() {
   const [displayHamburger, setDisplayHamburger] = useState<string>("none");
@@ -52,44 +52,52 @@ function App() {
           direction="column"
           display={displayHamburger}
           rowGap={5}
+          align="center"
         >
-          <Flex justify="flex-end" my={5} mx={5}>
+          <Flex justify="flex-end" my={5} px={5} width="100%">
             <Button onClick={() => setDisplayHamburger("none")}>Close nav</Button>
           </Flex>
-          
-          <Link to="/" onClick={() => setDisplayHamburger("none")}>
-            <Button colorScheme='teal' variant='outline' mx={5}>
-              Home
-            </Button>
-          </Link>
-          {user ? 
-            <>
-              <Button colorScheme='teal' onClick={logoutOperations} variant='outline' mx={5}>
-                Sign Out
-              </Button>
 
-              <Link to="/customize" style={{display: "block"}} onClick={() => setDisplayHamburger("none")}>
-                <Button colorScheme='teal' variant='outline' mx={5}>
-                  Profile
+            <Link to="/" onClick={() => setDisplayHamburger("none")}>
+              <Button width="306px" colorScheme='teal' variant='outline' mx={5}>
+                Home
+              </Button>
+            </Link>
+            {user ? 
+              <>
+                <Button width="306px" colorScheme='teal' onClick={logoutOperations} variant='outline' mx={5}>
+                  Sign Out
                 </Button>
-              </Link>
-            </>
-            :
-            <>
-              <Link to="/login" onClick={() => setDisplayHamburger("none")}>
-                <Button colorScheme='teal' variant='outline' mx={5}>
-                  Login
-                </Button>
-              </Link>
-              <Link to="/register" onClick={() => setDisplayHamburger("none")}>
-                <Button colorScheme='teal' variant='outline' mx={5}>
-                  Register
-                </Button>
-              </Link>
-            </>
-          }
-          
+
+                <Link to="/customize" onClick={() => setDisplayHamburger("none")}>
+                  <Button colorScheme='teal' width="306px" variant='outline' mx={5}>
+                    Profile
+                  </Button>
+                </Link>
+
+                <Link to="/create-review" onClick={() => setDisplayHamburger("none")}>
+                  <Button colorScheme='teal' width="306px" variant='outline' mx={5}>
+                    Create Review
+                  </Button>
+                </Link>
+              </>
+              :
+              <>
+                <Link to="/login" onClick={() => setDisplayHamburger("none")}>
+                  <Button width="306px" colorScheme='teal' variant='outline' mx={5}>
+                    Login
+                  </Button>
+                </Link>
+                <Link to="/register" onClick={() => setDisplayHamburger("none")}>
+                  <Button width="306px" colorScheme='teal' variant='outline' mx={5}>
+                    Register
+                  </Button>
+                </Link>
+              </>
+            }
+
         </Flex>
+          
 
         <Nav isUserFound={user}/>
 
@@ -110,6 +118,14 @@ function App() {
             element={
               <Protected isUserFound={user}>
                 <CustomizeProfile />
+              </Protected>
+            }
+          />
+          <Route
+            path="/create-review"
+            element={
+              <Protected isUserFound={user}>
+                <CreateReview />
               </Protected>
             }
           />
