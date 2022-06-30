@@ -6,13 +6,23 @@ import {
   Input,
   Textarea,
 } from "@chakra-ui/react";
-import { useState } from "react";
-
+import { useState, useRef } from "react";
 
 import StarRating from "../components/CreateReview/StarRating";
+import FileUploadBox from "../components/CreateReview/FileUploadBox";
+
+export interface IFormData {
+  institution?: string,
+  description?: string,
+  rating: number,
+  images?: string[]
+}
 
 const CreateReview = () => {
-  const [formData, setFormData] = useState<any>({})
+  const [formData, setFormData] = useState<IFormData>({
+    rating: 0,
+  })
+  const [files, setFiles] = useState<any>([])
 
   const onChange = (e: any) => {
     setFormData((prev: any) => ({
@@ -21,37 +31,32 @@ const CreateReview = () => {
     }))
   }
 
-  const onRatingChange = (rating: number) => {
-    setFormData((prev:any) => ({
-      ...prev,
-      rating
-    }))
+  const handleUploadChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFiles([{...e.target.files}])
   }
   return (
     <>
-      <Container padding={0} maxWidth={{ base: "100%", md: "1024px" }} height="100vh">
+      <Container padding={0} maxWidth={{ base: "100%", md: "1024px" }}>
         <Flex
           width="100%"
           direction="column"
           align="center"
-          justify="center"
           height="100vh"
         >
           
           <Flex
             width={{base:"306px", md: "750px"}}
-            pt={9}
-            height="25vh"
+            height="35%"
             direction="column"
             align="start"
             justify="center"
           >
-            <Text fontWeight="bold" fontSize="24px" textAlign="left">
+            <Text fontWeight="bold" pt={10} fontSize="24px" textAlign="left">
               Create New Review
             </Text>
           </Flex>
 
-          <Flex direction="column" rowGap={4} height="75vh" width={{base:"306px", md: "750px"}}>
+          <Flex direction="column" rowGap={4} height="auto" width={{base:"306px", md: "750px"}}>
             <Flex direction="column">
               <Text fontSize="15px" fontWeight="bold">
                 Institution
@@ -89,9 +94,35 @@ const CreateReview = () => {
               />
             </Flex>
 
-            <Button bg="#F35BDBA1" height="55px" border="2px" borderStyle="dashed" borderColor="#2D27278A" mb="15px">Drag or click to add images</Button>
+            <Button
+              bg="#F35BDBA1"
+              height="55px"
+              border="2px"
+              borderStyle="dashed"
+              borderColor="#2D27278A"
+              mb="15px"
+              pos="relative"
+            >
+              <Input
+                type="file"
+                height="100%"
+                width="100%"
+                position="absolute"
+                multiple
+                top="0"
+                left="0"
+                opacity="0"
+                aria-hidden="true"
+                accept="image/*"
+                onChange={handleUploadChange}
+              />
+              Drag or click to add images
+            </Button>
 
-            <StarRating onRatingChange={onRatingChange} />
+            <FileUploadBox />
+
+
+            <StarRating formData={formData} setFormData={setFormData} />
 
 
             <Button

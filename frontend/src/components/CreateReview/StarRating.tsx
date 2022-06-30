@@ -1,26 +1,30 @@
 import {
   Flex,
-  Button,
-  Container,
   Text,
-  Input,
-  Textarea,
   Icon
 } from "@chakra-ui/react";
-import { useState } from "react";
 
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 
+import { IFormData } from '../../pages/CreateReview'
+
 interface Props {
-  onRatingChange: (rating: number) => void
+  // onRatingChange: (rating: number) => void
+  formData: IFormData,
+  setFormData: React.Dispatch<React.SetStateAction<IFormData>>
 }
 
-const StarRating = ({ onRatingChange }: Props) => {
-  const [rating, setRating] = useState<number>(0);
+const StarRating = ({ formData, setFormData }: Props) => {
+  // const [rating, setRating] = useState<number>(0);
 
-  const onClick = (index: number, onRatingChange: (rating: number) => void) => {
-    setRating(index)
-    onRatingChange(rating)
+  const onClick = (index: number) => {
+    setFormData((prev) => ({
+      ...prev,
+      rating: index
+
+    }))
+    
+    // onRatingChange(rating)
   }
   return (
     <Flex direction="column" justify="center" align="center" rowGap="10px">
@@ -34,9 +38,9 @@ const StarRating = ({ onRatingChange }: Props) => {
             <button
               type="button"
               key={index}
-              onClick={() => onClick(index, onRatingChange)}
+              onClick={() => onClick(index)}
             >
-              {index <= rating ? (
+              {index <= formData.rating ? (
                 <Icon
                   as={AiFillStar}
                   color="yellow.400"
