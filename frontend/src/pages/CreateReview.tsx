@@ -15,14 +15,15 @@ export interface IFormData {
   institution?: string,
   description?: string,
   rating: number,
-  images?: string[]
+  images: string[]
 }
 
 const CreateReview = () => {
   const [formData, setFormData] = useState<IFormData>({
     rating: 0,
+    images: []
   })
-  const [files, setFiles] = useState<any>([])
+  const [files, setFiles] = useState<FileList[]>([])
 
   const onChange = (e: any) => {
     setFormData((prev: any) => ({
@@ -32,7 +33,20 @@ const CreateReview = () => {
   }
 
   const handleUploadChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFiles([{...e.target.files}])
+    setFiles((prevFiles: any) => ([
+      ...prevFiles,
+      {
+        ...e.target.files
+      }
+    ]))
+
+    // setFiles([{...e.target.files}])
+    // console.log(files.map((file) => Object.keys(file)[0]));
+    files.forEach((file) => {
+      console.log(file[0]);
+      
+    })
+    
   }
   return (
     <>
@@ -119,7 +133,10 @@ const CreateReview = () => {
               Drag or click to add images
             </Button>
 
-            <FileUploadBox />
+            {files.map((file: any, index: number) => (
+              <FileUploadBox key={index} file={file[0]} setFormData={setFormData} />
+              
+            ))}
 
 
             <StarRating formData={formData} setFormData={setFormData} />
