@@ -1,19 +1,23 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { ImCancelCircle } from "react-icons/im";
 import { Flex, Image, Text, Icon, Progress } from "@chakra-ui/react";
 import { v4 as uuidv4 } from 'uuid'
+import { storage, deleteStorageFile, storageRef } from "../../firebase/config";
 
 import uploadProgress from "../../firebase/uploadProgress";
 import {useAppSelector} from '../../app/hooks'
 
-import { IFormData } from '../../pages/CreateReview'
+// import { IFormData } from '../../pages/CreateReview'
 
 interface Props {
-  file: any,
+  files: FileList[]
+  file: any
+  fileIndex: number
   setFormData: React.Dispatch<React.SetStateAction<any>>
+  setFiles: React.Dispatch<React.SetStateAction<any>>
 }
 
-const FileUploadBox = ({file, setFormData}: Props) => {
+const FileUploadBox = ({files, file, fileIndex, setFormData, setFiles}: Props) => {
   const [progress, setProgress] = useState<number>(100)
   const [imageUrl, setImageUrl] = useState<string>("")
   
@@ -21,41 +25,57 @@ const FileUploadBox = ({file, setFormData}: Props) => {
 
   const currentUserId = user?._id
   console.log(file);
+  const uploadImage = async() => {
+    console.log(file.name);
+    console.log(process.env.REACT_APP_PROJECT_ID);
+    
+    const imageName = uuidv4() + "." + file.name.split(".").pop()
+    try {
+      const url = await uploadProgress(
+        file,
+        `reviewImages/${currentUserId}`,
+        imageName,
+        setProgress
+      )
+      console.log(url)
+      setImageUrl(url as string)
+      setFormData((prevData: any) => ({
+        ...prevData,
+        images: [
+          url
+        ]
+
+      }))
+    } catch (error: any) {
+      alert(error.message)
+      console.log(error);
+      
+    }
+
+  }
+  
   
   useEffect(() => {
-    const uploadImage = async() => {
-      console.log(file.name);
-      console.log(process.env.REACT_APP_PROJECT_ID);
-      
-      const imageName = uuidv4() + "." + file.name.split(".").pop()
-      try {
-        const url = await uploadProgress(
-          file,
-          `reviewImages/${currentUserId}`,
-          imageName,
-          setProgress
-        )
-        console.log(url)
-        setImageUrl(url as string)
-        setFormData((prevData: any) => ({
-          ...prevData,
-          images: [
-            ...prevData.images,
-            url
-          ]
-        }))
-
-      } catch (error: any) {
-        alert(error.message)
-        console.log(error);
-        
-      }
-
-    }
     uploadImage()
   }, [file])
   const onClick = () => {
+    // console.log(imageUrk);
     
+    const fileInStorage = storageRef(storage, imageUrl)
+
+    deleteStorageFile(fileInStorage).then(() => {
+      setFiles(files.filter((file: any, i: number) => i !== fileIndex))
+      setFormData((prevData: any) => ({
+        ...prevData,
+        images: [
+          prevData.images.filter((img: string) => img !== imageUrl)
+        ]
+      }))
+      setImageUrl("")
+    }).catch((error) => {
+      console.log(error);
+      
+    })
   }
   return (
     <Flex
@@ -78,12 +98,11 @@ const FileUploadBox = ({file, setFormData}: Props) => {
           opacity={ progress < 100 ? "0.5" : "1"}
         />
         <Text noOfLines={1} fontSize={15} overflow="hidden" opacity={ progress < 100 ? "0.5" : "1"}>
-          image2019groupchat.png231321312321312312312
+          {file.name}
         </Text>
       </Flex>
       <Flex align="center" justify="center" cursor="pointer" p={{base: 0, md: 3}} onClick={onClick}>
         <Icon as={ImCancelCircle} w={6} h={6} _hover={{color: "red.600"}} />
-
       </Flex>
       <Progress
         left="0"

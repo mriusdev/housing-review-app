@@ -42,10 +42,10 @@ const CreateReview = () => {
 
     // setFiles([{...e.target.files}])
     // console.log(files.map((file) => Object.keys(file)[0]));
-    files.forEach((file) => {
-      console.log(file[0]);
+    // files.forEach((file) => {
+    //   console.log(file[0]);
       
-    })
+    // })
     
   }
   return (
@@ -134,7 +134,14 @@ const CreateReview = () => {
             </Button>
 
             {files.map((file: any, index: number) => (
-              <FileUploadBox key={index} file={file[0]} setFormData={setFormData} />
+              <FileUploadBox
+                key={index}
+                fileIndex={index}
+                files={files}
+                file={file[0]}
+                setFormData={setFormData}
+                setFiles={setFiles}
+              />
               
             ))}
 
