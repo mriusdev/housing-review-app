@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
-import { Container, Text, Flex, Icon, Box } from "@chakra-ui/react";
+import { Container, Text, Flex, Icon, useMediaQuery } from "@chakra-ui/react";
 import { VscEdit } from "react-icons/vsc";
 import { MdOutlineCancel } from "react-icons/md";
 import toast, { Toaster } from 'react-hot-toast';
-import { useMediaQuery } from "@chakra-ui/react";
 
 import { useAppSelector, useAppDispatch } from "../app/hooks";
 import {

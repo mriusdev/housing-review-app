@@ -5,6 +5,7 @@ import {
   Text,
   Input,
   Textarea,
+  useMediaQuery
 } from "@chakra-ui/react";
 import { useState, useRef } from "react";
 
@@ -19,6 +20,8 @@ export interface IFormData {
 }
 
 const CreateReview = () => {
+  const [isMoreThanMd] = useMediaQuery('(min-width: 48em)')
+
   const [formData, setFormData] = useState<IFormData>({
     rating: 0,
     images: []
@@ -55,23 +58,32 @@ const CreateReview = () => {
           width="100%"
           direction="column"
           align="center"
-          height="100vh"
+          height={{base: "30vh", md: "19vh"}}
+          justify="center"
+          mt={isMoreThanMd ? 54 : 0 }
         >
           
           <Flex
             width={{base:"306px", md: "750px"}}
-            height="35%"
-            direction="column"
             align="start"
-            justify="center"
+            justify="flex-start"
           >
             <Text fontWeight="bold" pt={10} fontSize="24px" textAlign="left">
               Create New Review
             </Text>
           </Flex>
+        </Flex>
 
-          <Flex direction="column" rowGap={4} height="auto" width={{base:"306px", md: "750px"}}>
-            <Flex direction="column">
+        <Container maxWidth={{base: "306px", md: "750px"}} padding={0}>
+          <Flex
+            direction="column"
+            rowGap={4}
+            height="auto"
+            pb={16}
+            justify="center"
+            align="center"
+          >
+            <Flex direction="column" width="100%">
               <Text fontSize="15px" fontWeight="bold">
                 Institution
               </Text>
@@ -90,7 +102,7 @@ const CreateReview = () => {
               />
             </Flex>
 
-            <Flex direction="column">
+            <Flex direction="column" width="100%">
               <Text fontSize="15px" fontWeight="bold">
                 Description
               </Text>
@@ -110,19 +122,21 @@ const CreateReview = () => {
 
             <Button
               bg="#F35BDBA1"
-              height="55px"
+              height={{base: "55px", md: "70px"}}
               border="2px"
+              width="100%"
               borderStyle="dashed"
               borderColor="#2D27278A"
               mb="15px"
               pos="relative"
+              fontSize="14px"
+              fontWeight="normal"
             >
               <Input
                 type="file"
                 height="100%"
                 width="100%"
                 position="absolute"
-                multiple
                 top="0"
                 left="0"
                 opacity="0"
@@ -133,7 +147,7 @@ const CreateReview = () => {
               Drag or click to add images
             </Button>
 
-            {files.map((file: any, index: number) => (
+            {files && files.map((file: any, index: number) => (
               <FileUploadBox
                 key={index}
                 fileIndex={index}
@@ -145,9 +159,7 @@ const CreateReview = () => {
               
             ))}
 
-
             <StarRating formData={formData} setFormData={setFormData} />
-
 
             <Button
               colorScheme="yellow"
@@ -161,7 +173,7 @@ const CreateReview = () => {
               Post Review
             </Button>
           </Flex>
-        </Flex>
+        </Container>
       </Container>
     </>
   );

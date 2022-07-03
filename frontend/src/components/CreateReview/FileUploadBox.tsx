@@ -19,7 +19,7 @@ interface Props {
 
 const FileUploadBox = ({files, file, fileIndex, setFormData, setFiles}: Props) => {
   const [progress, setProgress] = useState<number>(100)
-  const [imageUrl, setImageUrl] = useState<string>("")
+  const [imageUrl, setImageUrl] = useState<string | null>(null)
   
   const { user } = useAppSelector((state) => state.auth)
 
@@ -56,12 +56,12 @@ const FileUploadBox = ({files, file, fileIndex, setFormData, setFiles}: Props) =
   
   
   useEffect(() => {
-    uploadImage()
+    if(imageUrl === null) {
+      uploadImage()
+    }
   }, [file])
   const onClick = () => {
-    // console.log(imageUrk);
-    
-    const fileInStorage = storageRef(storage, imageUrl)
+    const fileInStorage = storageRef(storage, imageUrl as string)
 
     deleteStorageFile(fileInStorage).then(() => {
       setFiles(files.filter((file: any, i: number) => i !== fileIndex))
@@ -71,7 +71,7 @@ const FileUploadBox = ({files, file, fileIndex, setFormData, setFiles}: Props) =
           prevData.images.filter((img: string) => img !== imageUrl)
         ]
       }))
-      setImageUrl("")
+      setImageUrl(null)
     }).catch((error) => {
       console.log(error);
       
@@ -87,12 +87,13 @@ const FileUploadBox = ({files, file, fileIndex, setFormData, setFiles}: Props) =
       bg="gray.100"
       borderRadius="15px"
       overflow="hidden"
+      width={{base: "100%", md: "50%"}}
     >
       <Flex maxW="84%" align="center" columnGap={2}>
         <Image
           boxSize="45px"
           objectFit="cover"
-          src={imageUrl}
+          src={imageUrl || 'https://via.placeholder.com/150'}
           alt="Dan Abramov"
           fallbackSrc='https://via.placeholder.com/150'
           opacity={ progress < 100 ? "0.5" : "1"}

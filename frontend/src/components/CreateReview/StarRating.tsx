@@ -27,11 +27,18 @@ const StarRating = ({ formData, setFormData }: Props) => {
     // onRatingChange(rating)
   }
   return (
-    <Flex direction="column" justify="center" align="center" rowGap="10px">
+    <Flex
+      direction="column"
+      justify="center"
+      align="center"
+      width="100%"
+      rowGap="1ch"
+      mt={10}
+    >
       <Text>
         Rate your stay
       </Text>
-      <Flex width="85%" justify="space-between" align="center">
+      <Flex width={{base: "85%", md: "50%"}} justify="space-between" align="center">
         {[...Array(5)].map((_, index) => {
           index += 1
           return (
